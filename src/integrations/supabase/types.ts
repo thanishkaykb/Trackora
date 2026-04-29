@@ -20,77 +20,110 @@ export type Database = {
           display_name: string | null
           email: string | null
           id: string
+          role: Database["public"]["Enums"]["user_role"] | null
+          updated_at: string
         }
         Insert: {
           created_at?: string
           display_name?: string | null
           email?: string | null
           id: string
+          role?: Database["public"]["Enums"]["user_role"] | null
+          updated_at?: string
         }
         Update: {
           created_at?: string
           display_name?: string | null
           email?: string | null
           id?: string
+          role?: Database["public"]["Enums"]["user_role"] | null
+          updated_at?: string
         }
         Relationships: []
       }
       shipments: {
         Row: {
+          amount_due: number
           created_at: string
           current_hub: string | null
           delay_cause: string | null
           delay_minutes: number
+          delivered_at: string | null
           destination: string
+          dispatched_at: string
           eco: boolean
           eta_minutes: number
           events: Json
           explanation: string | null
           id: string
+          item_name: string
           origin: string
+          payment_status: string
           priority: boolean
           progress: number
+          recipient_address: string | null
+          recipient_name: string
           route: Json
+          segment_progress: number
+          shop: string
           status: string
           tracking_id: string
           updated_at: string
           user_id: string
         }
         Insert: {
+          amount_due?: number
           created_at?: string
           current_hub?: string | null
           delay_cause?: string | null
           delay_minutes?: number
+          delivered_at?: string | null
           destination: string
+          dispatched_at?: string
           eco?: boolean
           eta_minutes?: number
           events?: Json
           explanation?: string | null
           id?: string
+          item_name?: string
           origin: string
+          payment_status?: string
           priority?: boolean
           progress?: number
+          recipient_address?: string | null
+          recipient_name?: string
           route?: Json
+          segment_progress?: number
+          shop?: string
           status?: string
           tracking_id: string
           updated_at?: string
           user_id: string
         }
         Update: {
+          amount_due?: number
           created_at?: string
           current_hub?: string | null
           delay_cause?: string | null
           delay_minutes?: number
+          delivered_at?: string | null
           destination?: string
+          dispatched_at?: string
           eco?: boolean
           eta_minutes?: number
           events?: Json
           explanation?: string | null
           id?: string
+          item_name?: string
           origin?: string
+          payment_status?: string
           priority?: boolean
           progress?: number
+          recipient_address?: string | null
+          recipient_name?: string
           route?: Json
+          segment_progress?: number
+          shop?: string
           status?: string
           tracking_id?: string
           updated_at?: string
@@ -106,7 +139,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      user_role: "seller" | "receiver"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -233,6 +266,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["seller", "receiver"],
+    },
   },
 } as const
