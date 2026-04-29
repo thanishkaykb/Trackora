@@ -5,10 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
-import Seller from "./pages/Seller";
-import Receiver from "./pages/Receiver";
-import Onboarding from "./pages/Onboarding";
-import Track from "./pages/Track";
+import Dashboard from "./pages/Dashboard";
 import AuthPage from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -23,11 +20,7 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/seller" element={<Seller />} />
-            <Route path="/receiver" element={<Receiver />} />
-            <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/track" element={<Track />} />
-            <Route path="/track/:id" element={<Track />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
