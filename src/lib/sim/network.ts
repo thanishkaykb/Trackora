@@ -1,4 +1,4 @@
-// Hub network for PulseTrack AI — node positions are normalized 0..1 for SVG rendering.
+// Hub network for Trackora — node positions are normalized 0..1 for SVG rendering.
 export type Hub = {
   id: string;
   name: string;

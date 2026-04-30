@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-const STORAGE_KEY = "pulsetrack:receiver:tracked-ids";
+const STORAGE_KEY = "trackora:receiver:tracked-ids";
 
 export default function Receiver() {
   const { user, loading, role, roleLoading } = useAuth();

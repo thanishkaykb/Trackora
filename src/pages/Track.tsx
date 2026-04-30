@@ -51,7 +51,7 @@ export default function Track() {
               <Activity className="w-4 h-4 text-primary-foreground" />
             </div>
             <div>
-              <div className="font-display font-semibold leading-none">PulseTrack <span className="text-gradient">AI</span></div>
+              <div className="font-display font-semibold leading-none">Trackora</div>
               <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Public tracking</div>
             </div>
           </Link>

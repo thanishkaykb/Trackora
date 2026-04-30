@@ -40,7 +40,7 @@ export default function Index() {
               before the problem happens.
             </h1>
             <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto">
-              PulseTrack AI predicts delays, auto-reroutes packages, and explains every decision —
+              Trackora predicts delays, auto-reroutes packages, and explains every decision —
               a simulation-driven intelligence layer for modern delivery networks.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -126,7 +126,7 @@ export default function Index() {
       </section>
 
       <footer className="max-w-[1200px] mx-auto px-6 pb-10 text-center text-xs text-muted-foreground">
-        © PulseTrack AI · Predictive logistics intelligence
+        © Trackora · Predictive logistics intelligence
       </footer>
     </div>
   );

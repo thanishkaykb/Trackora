@@ -41,7 +41,7 @@ export default function Onboarding() {
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-3xl p-8 w-full max-w-2xl relative">
         <div className="text-center mb-8">
           <div className="text-xs uppercase tracking-widest text-muted-foreground">Step 1 of 1</div>
-          <h1 className="font-display text-3xl md:text-4xl font-semibold mt-2">How will you use PulseTrack?</h1>
+          <h1 className="font-display text-3xl md:text-4xl font-semibold mt-2">How will you use Trackora?</h1>
           <p className="text-sm text-muted-foreground mt-2">You can't change this later from the UI, so pick the role that matches you best.</p>
         </div>
 
