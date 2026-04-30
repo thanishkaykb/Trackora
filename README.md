@@ -1,4 +1,4 @@
-# ✨ Texora
+# ✨ Trackora
 
 ### *Track smarter. Understand faster.*
 
@@ -6,7 +6,7 @@
 
 ## 🚀 Overview
 
-**Texora** is a sleek platform built to simplify how you track and manage data in real time. Designed with clarity at its core, it transforms complex information into clean, actionable insights—so you spend less time figuring things out and more time making decisions.
+**Trackora** is a sleek platform built to simplify how you track and manage data in real time. Designed with clarity at its core, it transforms complex information into clean, actionable insights—so you spend less time figuring things out and more time making decisions.
 
 ---
 
@@ -90,6 +90,6 @@ Want to improve Texora?
 
 ## 💬 Final Note
 
-Texora isn’t just about tracking—it’s about **making sense of what you track**, without the chaos.
+Trackora isn’t just about tracking—it’s about **making sense of what you track**, without the chaos.
 
 ---
