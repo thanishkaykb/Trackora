@@ -36,18 +36,25 @@ export default function AuthPage() {
           options: { emailRedirectTo: `${window.location.origin}/onboarding` },
         });
         if (error) throw error;
-        // If a session wasn't returned (email confirm still required), try to sign in.
         if (!data.session) {
-          const { error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
-          if (signInErr) throw signInErr;
+          toast.success("Check your email to verify your account before signing in.", { duration: 8000 });
+          setPassword("");
+          return;
         }
         toast.success("Account created — welcome!");
+        nav("/onboarding");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        if (error) {
+          if (error.message.toLowerCase().includes("email not confirmed")) {
+            toast.error("Please verify your email first. Check your inbox for the verification link.", { duration: 8000 });
+            return;
+          }
+          throw error;
+        }
         toast.success("Signed in");
+        nav("/onboarding");
       }
-      nav("/onboarding");
     } catch (err: any) {
       toast.error(err.message ?? "Auth failed");
     } finally { setLoading(false); }
