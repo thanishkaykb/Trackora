@@ -16,7 +16,7 @@ const features = [
 
 export default function Index() {
   const { user, role } = useAuth();
-  const dashHref = !user ? "/auth" : (role === "seller" ? "/seller" : role === "receiver" ? "/receiver" : "/onboarding");
+  const dashHref = !user ? "/start" : (role === "seller" ? "/seller" : role === "receiver" ? "/receiver" : "/onboarding");
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Topbar />
@@ -46,12 +46,9 @@ export default function Index() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link to={dashHref}>
                 <Button size="lg" className="bg-gradient-primary text-primary-foreground hover:opacity-90 glow-primary group">
-                  Open live dashboard
+                  Get started
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
-              </Link>
-              <Link to="/auth">
-                <Button size="lg" variant="outline" className="glass">Create account</Button>
               </Link>
               <Link to="/track">
                 <Button size="lg" variant="ghost">Track a package</Button>
