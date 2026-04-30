@@ -21,7 +21,7 @@ export default function AuthPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => { if (session) nav("/dashboard", { replace: true }); }, [session, nav]);
+  useEffect(() => { if (session) nav("/onboarding", { replace: true }); }, [session, nav]);
 
   const handleEmail = async (mode: "signin" | "signup") => {
     const e = emailSchema.safeParse(email);
@@ -33,7 +33,7 @@ export default function AuthPage() {
       if (mode === "signup") {
         const { error } = await supabase.auth.signUp({
           email, password,
-          options: { emailRedirectTo: `${window.location.origin}/dashboard` },
+          options: { emailRedirectTo: `${window.location.origin}/onboarding` },
         });
         if (error) throw error;
         toast.success("Account created — welcome!");
@@ -42,14 +42,14 @@ export default function AuthPage() {
         if (error) throw error;
         toast.success("Signed in");
       }
-      nav("/dashboard");
+      nav("/onboarding");
     } catch (err: any) {
       toast.error(err.message ?? "Auth failed");
     } finally { setLoading(false); }
   };
 
   const handleGoogle = async () => {
-    const r = await lovable.auth.signInWithOAuth("google", { redirect_uri: `${window.location.origin}/dashboard` });
+    const r = await lovable.auth.signInWithOAuth("google", { redirect_uri: `${window.location.origin}/onboarding` });
     if (r.error) toast.error("Google sign-in failed");
   };
 
