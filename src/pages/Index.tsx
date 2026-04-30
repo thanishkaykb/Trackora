@@ -53,6 +53,9 @@ export default function Index() {
               <Link to="/auth">
                 <Button size="lg" variant="outline" className="glass">Create account</Button>
               </Link>
+              <Link to="/track">
+                <Button size="lg" variant="ghost">Track a package</Button>
+              </Link>
             </div>
           </motion.div>
 
