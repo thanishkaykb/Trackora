@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Activity, ArrowRight, Brain, Leaf, Route, Shield, Sparkles, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Topbar } from "@/components/pulse/Topbar";
+import { useAuth } from "@/hooks/useAuth";
 
 const features = [
   { icon: Brain, title: "Predictive delay engine", desc: "Anticipates traffic, weather, and hub overload before it impacts ETA." },
@@ -14,6 +15,8 @@ const features = [
 ];
 
 export default function Index() {
+  const { user, role } = useAuth();
+  const dashHref = !user ? "/auth" : (role === "seller" ? "/seller" : role === "receiver" ? "/receiver" : "/onboarding");
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Topbar />
