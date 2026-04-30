@@ -36,12 +36,12 @@ export default function Index() {
               Live simulation engine · v1.0
             </div>
             <h1 className="font-display text-5xl md:text-7xl font-semibold leading-[1.05] tracking-tight">
-              Logistics that <span className="text-gradient">thinks</span><br />
-              before the problem happens.
+              No guesswork.<br />
+              Just <span className="text-gradient">movement</span>.
             </h1>
             <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto">
-              Trackora predicts delays, auto-reroutes packages, and explains every decision —
-              a simulation-driven intelligence layer for modern delivery networks.
+              Stay updated with live tracking, streamline dispatch, and ensure every order
+              reaches exactly where it should.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link to={dashHref}>
