@@ -11,6 +11,7 @@ import Onboarding from "./pages/Onboarding";
 import Track from "./pages/Track";
 import AuthPage from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import Start from "./pages/Start";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/start" element={<Start />} />
             <Route path="/seller" element={<Seller />} />
             <Route path="/receiver" element={<Receiver />} />
             <Route path="/onboarding" element={<Onboarding />} />
