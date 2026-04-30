@@ -44,7 +44,7 @@ export default function Index() {
               a simulation-driven intelligence layer for modern delivery networks.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link to="/dashboard">
+              <Link to={dashHref}>
                 <Button size="lg" className="bg-gradient-primary text-primary-foreground hover:opacity-90 glow-primary group">
                   Open live dashboard
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -113,7 +113,7 @@ export default function Index() {
             <Activity className="w-10 h-10 mx-auto text-primary mb-4 animate-pulse-glow" />
             <h3 className="font-display text-3xl md:text-4xl font-semibold">See it think in real time</h3>
             <p className="mt-3 text-muted-foreground">Open the live dashboard and watch the simulation predict, reroute, and explain.</p>
-            <Link to="/dashboard" className="inline-block mt-6">
+            <Link to={dashHref} className="inline-block mt-6">
               <Button size="lg" className="bg-gradient-primary text-primary-foreground hover:opacity-90 glow-primary">
                 Launch dashboard <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
