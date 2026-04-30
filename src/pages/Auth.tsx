@@ -76,7 +76,7 @@ export default function AuthPage() {
             <Activity className="w-4 h-4 text-primary-foreground" />
           </div>
           <div>
-            <div className="font-display font-semibold">PulseTrack <span className="text-gradient">AI</span></div>
+            <div className="font-display font-semibold">Trackora</div>
             <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Welcome back</div>
           </div>
         </Link>
@@ -118,7 +118,7 @@ export default function AuthPage() {
         </Button>
 
         <p className="text-xs text-muted-foreground text-center mt-6">
-          By continuing you agree to PulseTrack AI's terms.
+          By continuing you agree to Trackora's terms.
         </p>
       </div>
     </div>
