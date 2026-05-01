@@ -55,6 +55,7 @@ export default function AuthPage() {
           setPassword("");
           return;
         }
+        setRedirecting(true);
         toast.success("Account created — welcome!");
         nav("/onboarding");
       } else {
@@ -66,6 +67,7 @@ export default function AuthPage() {
           }
           throw error;
         }
+        setRedirecting(true);
         toast.success("Signed in");
       }
     } catch (err: any) {
@@ -74,8 +76,12 @@ export default function AuthPage() {
   };
 
   const handleGoogle = async () => {
+    setRedirecting(true);
     const r = await lovable.auth.signInWithOAuth("google", { redirect_uri: `${window.location.origin}/onboarding` });
-    if (r.error) toast.error("Google sign-in failed");
+    if (r.error) {
+      setRedirecting(false);
+      toast.error("Google sign-in failed");
+    }
   };
 
   if (authLoading || signingOut || redirecting || session) {
