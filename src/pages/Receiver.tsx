@@ -71,7 +71,7 @@ export default function Receiver() {
   };
 
   if (loading || roleLoading || !user || role !== "receiver") {
-    return <div className="min-h-screen grid place-items-center text-muted-foreground">Loading…</div>;
+    return null;
   }
 
   const active = activeId ? shipments[activeId] : undefined;
