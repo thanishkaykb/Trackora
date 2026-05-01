@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 const STORAGE_KEY = "trackora:receiver:tracked-ids";
 
 export default function Receiver() {
-  const { user, loading, role, roleLoading } = useAuth();
+  const { user, loading, role, roleLoading, signingOut } = useAuth();
   const nav = useNavigate();
   const [ids, setIds] = useState<string[]>([]);
   const [shipments, setShipments] = useState<Record<string, ShipmentRow>>({});
@@ -24,7 +24,7 @@ export default function Receiver() {
   const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (loading || roleLoading) return;
+    if (loading || roleLoading || signingOut) return;
     if (!user) { nav("/auth", { replace: true }); return; }
     if (!role) { nav("/onboarding", { replace: true }); return; }
     if (role !== "receiver") { nav("/seller", { replace: true }); return; }
@@ -70,7 +70,7 @@ export default function Receiver() {
     if (activeId === v) setActiveId(next[0] ?? null);
   };
 
-  if (loading || roleLoading || !user || role !== "receiver") {
+  if (loading || roleLoading || signingOut || !user || role !== "receiver") {
     return null;
   }
 
