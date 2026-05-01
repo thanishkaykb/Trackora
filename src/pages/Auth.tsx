@@ -16,13 +16,15 @@ const passSchema = z.string().min(6).max(72);
 
 export default function AuthPage() {
   const nav = useNavigate();
-  const { session, signingOut } = useAuth();
+  const { session, loading: authLoading, signingOut } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
 
   useEffect(() => {
-    if (!session || signingOut) return;
+    if (authLoading || !session || signingOut) return;
+    setRedirecting(true);
     (async () => {
       const { data } = await supabase
         .from("profiles")
@@ -33,7 +35,7 @@ export default function AuthPage() {
       else if (data?.role === "receiver") nav("/receiver", { replace: true });
       else nav("/onboarding", { replace: true });
     })();
-  }, [session, nav]);
+  }, [authLoading, session, signingOut, nav]);
 
   const handleEmail = async (mode: "signin" | "signup") => {
     const e = emailSchema.safeParse(email);
@@ -65,7 +67,6 @@ export default function AuthPage() {
           throw error;
         }
         toast.success("Signed in");
-        nav("/onboarding");
       }
     } catch (err: any) {
       toast.error(err.message ?? "Auth failed");
@@ -76,6 +77,10 @@ export default function AuthPage() {
     const r = await lovable.auth.signInWithOAuth("google", { redirect_uri: `${window.location.origin}/onboarding` });
     if (r.error) toast.error("Google sign-in failed");
   };
+
+  if (authLoading || signingOut || redirecting || session) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen grid place-items-center px-4 relative overflow-hidden">
