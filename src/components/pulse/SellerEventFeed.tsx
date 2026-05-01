@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useShipments } from "@/hooks/useShipments";
 import { deriveEvents } from "@/lib/sim/timeline";
 import { Activity, AlertTriangle, CheckCircle2, MapPin, Plus } from "lucide-react";
@@ -29,25 +29,23 @@ export function SellerEventFeed() {
         <div className="text-sm text-muted-foreground py-12 text-center">No events yet — dispatch a shipment to begin.</div>
       ) : (
         <div className="flex-1 overflow-y-auto space-y-2 pr-1 max-h-[420px]">
-          <AnimatePresence initial={false}>
-            {events.map((e, i) => {
-              const Icon = ICONS[e.type] ?? Activity;
-              const color = COLORS[e.type] ?? "text-muted-foreground";
-              return (
-                <motion.div key={`${e.ts}-${i}`} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.25 }}
-                  className="flex items-start gap-3 text-sm p-2 rounded-lg hover:bg-muted/40">
-                  <Icon className={`w-4 h-4 mt-0.5 shrink-0 ${color}`} />
-                  <div className="min-w-0 flex-1">
-                    <div className="text-foreground/90">{e.message}</div>
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-mono">
-                      <span className="text-primary">{e.tid}</span>
-                      {e.hub && <> · {hubMap.get(e.hub)?.city ?? e.hub}</>} · {new Date(e.ts).toLocaleString()}
-                    </div>
+          {events.map((e, i) => {
+            const Icon = ICONS[e.type] ?? Activity;
+            const color = COLORS[e.type] ?? "text-muted-foreground";
+            return (
+              <motion.div key={`${e.ts}-${i}`} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.25 }}
+                className="flex items-start gap-3 text-sm p-2 rounded-lg hover:bg-muted/40">
+                <Icon className={`w-4 h-4 mt-0.5 shrink-0 ${color}`} />
+                <div className="min-w-0 flex-1">
+                  <div className="text-foreground/90">{e.message}</div>
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-mono">
+                    <span className="text-primary">{e.tid}</span>
+                    {e.hub && <> · {hubMap.get(e.hub)?.city ?? e.hub}</>} · {new Date(e.ts).toLocaleString()}
                   </div>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       )}
     </div>

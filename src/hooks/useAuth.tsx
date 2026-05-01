@@ -27,11 +27,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const nav = useNavigate();
 
   useEffect(() => {
+    let initialized = false;
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
       setSession(s);
-      setLoading(false);
+      if (initialized) setLoading(false);
     });
     supabase.auth.getSession().then(({ data }) => {
+      initialized = true;
       setSession(data.session);
       setLoading(false);
     });
