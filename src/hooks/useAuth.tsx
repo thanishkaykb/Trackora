@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Session, User } from "@supabase/supabase-js";
+import { useNavigate } from "react-router-dom";
 
 export type UserRole = "seller" | "receiver";
 
@@ -10,6 +11,7 @@ type AuthCtx = {
   loading: boolean;
   role: UserRole | null;
   roleLoading: boolean;
+  signingOut: boolean;
   refreshRole: () => Promise<void>;
   setRole: (role: UserRole) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
@@ -21,6 +23,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [role, setRoleState] = useState<UserRole | null>(null);
   const [roleLoading, setRoleLoading] = useState(true);
+  const [signingOut, setSigningOut] = useState(false);
+  const nav = useNavigate();
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
@@ -63,11 +67,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loading,
     role,
     roleLoading,
+    signingOut,
     refreshRole,
     setRole,
     signOut: async () => {
+      setSigningOut(true);
+      setRoleState(null);
       await supabase.auth.signOut();
-      window.location.href = "/start";
+      nav("/start", { replace: true });
+      setSigningOut(false);
     },
   };
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
