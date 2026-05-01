@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
-import { Activity } from "lucide-react";
+import { Activity, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 const emailSchema = z.string().trim().email().max(255);
@@ -21,7 +21,19 @@ export default function AuthPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => { if (session) nav("/onboarding", { replace: true }); }, [session, nav]);
+  useEffect(() => {
+    if (!session) return;
+    (async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", session.user.id)
+        .maybeSingle();
+      if (data?.role === "seller") nav("/seller", { replace: true });
+      else if (data?.role === "receiver") nav("/receiver", { replace: true });
+      else nav("/onboarding", { replace: true });
+    })();
+  }, [session, nav]);
 
   const handleEmail = async (mode: "signin" | "signup") => {
     const e = emailSchema.safeParse(email);
@@ -120,6 +132,11 @@ export default function AuthPage() {
         <p className="text-xs text-muted-foreground text-center mt-6">
           By continuing you agree to Trackora's terms.
         </p>
+        <div className="text-center mt-3">
+          <Link to="/start" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft className="w-3 h-3" /> Back to role selection
+          </Link>
+        </div>
       </div>
     </div>
   );

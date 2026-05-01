@@ -88,7 +88,7 @@ export default function Seller() {
   }, [user, loading, role, roleLoading, nav]);
 
   if (loading || roleLoading || !user || role !== "seller") {
-    return <div className="min-h-screen grid place-items-center text-muted-foreground">Loading…</div>;
+    return null;
   }
   return <ShipmentsProvider><SellerInner /></ShipmentsProvider>;
 }

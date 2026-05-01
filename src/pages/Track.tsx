@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Activity, Search, Package, MapPin, Clock, AlertTriangle, CheckCircle2, Store, User } from "lucide-react";
+import { Activity, Search, Package, MapPin, Clock, AlertTriangle, CheckCircle2, Store, User, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -55,7 +55,11 @@ export default function Track() {
               <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Public tracking</div>
             </div>
           </Link>
-          <Link to="/auth"><Button variant="secondary" size="sm">Sign in</Button></Link>
+          <Link to="/start">
+            <Button variant="secondary" size="sm">
+              <ArrowLeft className="w-3.5 h-3.5 mr-1" /> Go back
+            </Button>
+          </Link>
         </div>
       </header>
 

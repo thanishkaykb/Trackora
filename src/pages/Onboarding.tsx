@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Package, Truck, ArrowRight } from "lucide-react";
+import { Package, Truck, ArrowRight, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
@@ -69,6 +69,11 @@ export default function Onboarding() {
         >
           Continue <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
+        <div className="mt-4 text-center">
+          <Link to="/start" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft className="w-3 h-3" /> Back to role selection
+          </Link>
+        </div>
       </motion.div>
     </div>
   );
