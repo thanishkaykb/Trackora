@@ -77,17 +77,17 @@ function SellerInner() {
 }
 
 export default function Seller() {
-  const { user, loading, role, roleLoading } = useAuth();
+  const { user, loading, role, roleLoading, signingOut } = useAuth();
   const nav = useNavigate();
 
   useEffect(() => {
-    if (loading || roleLoading) return;
+    if (loading || roleLoading || signingOut) return;
     if (!user) { nav("/auth", { replace: true }); return; }
     if (!role) { nav("/onboarding", { replace: true }); return; }
     if (role !== "seller") { nav("/receiver", { replace: true }); return; }
   }, [user, loading, role, roleLoading, nav]);
 
-  if (loading || roleLoading || !user || role !== "seller") {
+  if (loading || roleLoading || signingOut || !user || role !== "seller") {
     return null;
   }
   return <ShipmentsProvider><SellerInner /></ShipmentsProvider>;

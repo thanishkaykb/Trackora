@@ -16,13 +16,13 @@ const passSchema = z.string().min(6).max(72);
 
 export default function AuthPage() {
   const nav = useNavigate();
-  const { session } = useAuth();
+  const { session, signingOut } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!session) return;
+    if (!session || signingOut) return;
     (async () => {
       const { data } = await supabase
         .from("profiles")
