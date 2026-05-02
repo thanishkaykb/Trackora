@@ -11,6 +11,9 @@ import { hubMap } from "@/lib/sim/network";
 import { SingleShipmentMap } from "@/components/pulse/SingleShipmentMap";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { CURRENCIES, formatMoney, countryByCode } from "@/lib/sim/countries";
+import { useFxConvert } from "@/hooks/useFx";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function Track() {
   const { id: idParam } = useParams();
@@ -19,6 +22,13 @@ export default function Track() {
   const [loading, setLoading] = useState(false);
   const [shipment, setShipment] = useState<ShipmentRow | null>(null);
   const [, setNow] = useState(Date.now());
+  const [viewCurrency, setViewCurrency] = useState<string>(() => {
+    try {
+      const lang = navigator.language || "en-US";
+      const region = lang.split("-")[1] ?? "US";
+      return countryByCode.get(region.toUpperCase())?.currency ?? "USD";
+    } catch { return "USD"; }
+  });
 
   useEffect(() => {
     const t = setInterval(() => setNow(Date.now()), 15_000);
@@ -120,6 +130,9 @@ export default function Track() {
                   <span className="flex items-center gap-1.5"><User className="w-3.5 h-3.5" />for <span className="text-foreground">{shipment.recipient_name}</span></span>
                   <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" />{hubMap.get(shipment.origin)?.city} → {hubMap.get(shipment.destination)?.city}</span>
                 </div>
+                {Number(shipment.amount_due) > 0 && (
+                  <PriceBlock shipment={shipment} viewCurrency={viewCurrency} setViewCurrency={setViewCurrency} />
+                )}
                 <div>
                   <div className="flex justify-between text-xs mb-1.5">
                     <span className="text-muted-foreground">At <span className="text-foreground">{hubMap.get(live.currentHub)?.city}</span>{live.nextHub && <> → {hubMap.get(live.nextHub)?.city}</>}</span>
