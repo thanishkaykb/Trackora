@@ -4,6 +4,7 @@ import { useShipments } from "@/hooks/useShipments";
 import { computeLive } from "@/lib/sim/timeline";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { WorldBackdrop } from "./WorldBackdrop";
 
 const W = 1000;
 const H = 560;
@@ -31,6 +32,7 @@ export function SellerMap() {
     <div className="glass rounded-2xl p-4 relative overflow-hidden">
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto relative">
+        <WorldBackdrop />
         {EDGES.map((e, i) => {
           const a = hubMap.get(e.from)!;
           const b = hubMap.get(e.to)!;
