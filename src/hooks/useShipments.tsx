@@ -10,6 +10,7 @@ type CreateInput = {
   itemName: string;
   shop: string;
   recipientName: string;
+  recipientPhone?: string;
   recipientAddress?: string;
   amountDue?: number;
   paymentStatus?: "paid" | "unpaid";
@@ -90,6 +91,7 @@ export function ShipmentsProvider({ children }: { children: ReactNode }) {
       item_name: input.itemName,
       shop: input.shop,
       recipient_name: input.recipientName,
+      recipient_phone: input.recipientPhone ?? null,
       recipient_address: input.recipientAddress ?? null,
       amount_due: input.amountDue ?? 0,
       payment_status: input.paymentStatus ?? "unpaid",
