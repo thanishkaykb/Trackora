@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useShipments } from "@/hooks/useShipments";
-import { HUBS } from "@/lib/sim/network";
+import { COUNTRIES, CURRENCIES, hubForCountry, countryByCode } from "@/lib/sim/countries";
+import { hubMap } from "@/lib/sim/network";
 import { Leaf, Plus, Zap, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -14,15 +15,21 @@ const schema = z.object({
   itemName: z.string().trim().min(1).max(120),
   shop: z.string().trim().min(1).max(120),
   recipientName: z.string().trim().min(1).max(120),
-  recipientPhone: z.string().trim().min(5, "Phone number is required").max(30),
+  recipientPhone: z.string().trim().min(4, "Phone number is required").max(30),
   recipientAddress: z.string().trim().min(1, "Address is required").max(500),
-  amountDue: z.number().min(0).max(1_000_000),
+  recipientCountry: z.string().length(2),
+  originCountry: z.string().length(2),
+  phoneCountry: z.string().length(2),
+  currency: z.string().length(3),
+  amountDue: z.number().min(0).max(1_000_000_000),
 });
 
 export function SellerCreateShipment() {
   const { create } = useShipments();
-  const [origin, setOrigin] = useState("SFO");
-  const [destination, setDestination] = useState("JFK");
+  const [originCountry, setOriginCountry] = useState("US");
+  const [recipientCountry, setRecipientCountry] = useState("GB");
+  const [phoneCountry, setPhoneCountry] = useState("GB");
+  const [currency, setCurrency] = useState("USD");
   const [itemName, setItemName] = useState("");
   const [shop, setShop] = useState("");
   const [recipientName, setRecipientName] = useState("");
@@ -35,10 +42,15 @@ export function SellerCreateShipment() {
   const [submitting, setSubmitting] = useState(false);
   const [lastTid, setLastTid] = useState<string | null>(null);
 
+  const origin = useMemo(() => hubForCountry(originCountry), [originCountry]);
+  const destination = useMemo(() => hubForCountry(recipientCountry), [recipientCountry]);
+  const phoneDial = countryByCode.get(phoneCountry)?.dial ?? "+";
+
   const submit = async () => {
-    if (origin === destination) return toast.error("Origin and destination must differ");
+    if (origin === destination) return toast.error("Origin and destination countries must use different hubs");
     const parsed = schema.safeParse({
       itemName, shop, recipientName, recipientPhone, recipientAddress,
+      recipientCountry, originCountry, phoneCountry, currency,
       amountDue: Number(amount) || 0,
     });
     if (!parsed.success) return toast.error("Please fill all required fields");
@@ -48,9 +60,12 @@ export function SellerCreateShipment() {
       itemName: parsed.data.itemName,
       shop: parsed.data.shop,
       recipientName: parsed.data.recipientName,
-      recipientPhone: parsed.data.recipientPhone,
+      recipientPhone: `${phoneDial} ${parsed.data.recipientPhone}`.trim(),
+      recipientPhoneCountry: phoneCountry,
+      recipientCountry,
       recipientAddress: parsed.data.recipientAddress,
       amountDue: parsed.data.amountDue,
+      currency: parsed.data.currency,
       paymentStatus: paid ? "paid" : "unpaid",
       priority, eco,
     });
@@ -65,7 +80,7 @@ export function SellerCreateShipment() {
     <div className="glass rounded-2xl p-5 space-y-4">
       <div>
         <h3 className="font-display text-lg">Dispatch new shipment</h3>
-        <p className="text-xs text-muted-foreground">A tracking ID is generated automatically — share it with the receiver.</p>
+        <p className="text-xs text-muted-foreground">Worldwide delivery — pick origin & destination countries and we'll route through the nearest hubs.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -75,22 +90,58 @@ export function SellerCreateShipment() {
         <Field label="Shop / brand *">
           <Input value={shop} onChange={e => setShop(e.target.value)} placeholder="Aether Audio" />
         </Field>
+        <CountrySelect label="From country *" value={originCountry} onChange={setOriginCountry} />
+        <CountrySelect label="To country *" value={recipientCountry} onChange={setRecipientCountry} />
         <Field label="Recipient name *">
           <Input value={recipientName} onChange={e => setRecipientName(e.target.value)} placeholder="Maya Chen" />
         </Field>
         <Field label="Recipient phone *">
-          <Input type="tel" value={recipientPhone} onChange={e => setRecipientPhone(e.target.value)} placeholder="+1 555 123 4567" />
+          <div className="flex gap-1.5">
+            <div className="w-[130px] shrink-0">
+              <Select value={phoneCountry} onValueChange={setPhoneCountry}>
+                <SelectTrigger className="bg-muted/40 border-border">
+                  <SelectValue>
+                    <span className="font-mono text-xs">{countryByCode.get(phoneCountry)?.flag} {phoneDial}</span>
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent className="max-h-72">
+                  {COUNTRIES.map(c => (
+                    <SelectItem key={c.code} value={c.code}>
+                      <span className="font-mono">{c.flag} {c.dial}</span> <span className="text-muted-foreground">· {c.name}</span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Input type="tel" value={recipientPhone} onChange={e => setRecipientPhone(e.target.value)} placeholder="555 123 4567" />
+          </div>
         </Field>
-        <Field label="Amount due (USD)">
-          <Input type="number" min={0} value={amount} onChange={e => setAmount(e.target.value)} />
+        <Field label="Amount due">
+          <div className="flex gap-1.5">
+            <div className="w-[110px] shrink-0">
+              <Select value={currency} onValueChange={setCurrency}>
+                <SelectTrigger className="bg-muted/40 border-border"><SelectValue /></SelectTrigger>
+                <SelectContent className="max-h-72">
+                  {CURRENCIES.map(c => (
+                    <SelectItem key={c.code} value={c.code}>{c.code}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Input type="number" min={0} value={amount} onChange={e => setAmount(e.target.value)} />
+          </div>
         </Field>
         <div className="md:col-span-2">
           <Field label="Recipient address *">
-            <Input value={recipientAddress} onChange={e => setRecipientAddress(e.target.value)} placeholder="123 Market St, San Francisco, CA" />
+            <Input value={recipientAddress} onChange={e => setRecipientAddress(e.target.value)} placeholder="221B Baker St, London" />
           </Field>
         </div>
-        <HubSelect label="From hub *" value={origin} onChange={setOrigin} />
-        <HubSelect label="To hub *" value={destination} onChange={setDestination} />
+      </div>
+
+      <div className="glass-strong rounded-xl px-3 py-2 text-xs text-muted-foreground">
+        Auto-routing: <span className="text-foreground">{hubMap.get(origin)?.city} <span className="font-mono">({origin})</span></span>
+        {" → "}
+        <span className="text-foreground">{hubMap.get(destination)?.city} <span className="font-mono">({destination})</span></span>
       </div>
 
       <div className="grid grid-cols-3 gap-2">
@@ -131,13 +182,15 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function HubSelect({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+function CountrySelect({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
   return (
     <Field label={label}>
       <Select value={value} onValueChange={onChange}>
         <SelectTrigger className="bg-muted/40 border-border"><SelectValue /></SelectTrigger>
-        <SelectContent>
-          {HUBS.map(h => <SelectItem key={h.id} value={h.id}>{h.city} ({h.id})</SelectItem>)}
+        <SelectContent className="max-h-72">
+          {COUNTRIES.map(c => (
+            <SelectItem key={c.code} value={c.code}>{c.flag} {c.name}</SelectItem>
+          ))}
         </SelectContent>
       </Select>
     </Field>

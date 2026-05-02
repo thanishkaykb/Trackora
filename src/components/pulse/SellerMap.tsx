@@ -4,6 +4,7 @@ import { useShipments } from "@/hooks/useShipments";
 import { computeLive } from "@/lib/sim/timeline";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { WorldBackdrop } from "./WorldBackdrop";
 
 const W = 1000;
 const H = 560;
@@ -31,6 +32,7 @@ export function SellerMap() {
     <div className="glass rounded-2xl p-4 relative overflow-hidden">
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto relative">
+        <WorldBackdrop />
         {EDGES.map((e, i) => {
           const a = hubMap.get(e.from)!;
           const b = hubMap.get(e.to)!;
@@ -81,10 +83,9 @@ export function SellerMap() {
 
         {HUBS.map(h => (
           <g key={h.id} transform={`translate(${h.x * W}, ${h.y * H})`}>
-            <circle r={18} fill="url(#hubGrad)" opacity={0.25} />
-            <circle r={6} fill="hsl(var(--primary))" />
-            <text y={-14} textAnchor="middle" className="fill-foreground" fontSize="11" fontFamily="JetBrains Mono, monospace">{h.id}</text>
-            <text y={26} textAnchor="middle" className="fill-muted-foreground" fontSize="9">{h.city}</text>
+            <circle r={12} fill="url(#hubGrad)" opacity={0.25} />
+            <circle r={4} fill="hsl(var(--primary))" />
+            <text y={-8} textAnchor="middle" className="fill-foreground" fontSize="9" fontFamily="JetBrains Mono, monospace">{h.id}</text>
           </g>
         ))}
 

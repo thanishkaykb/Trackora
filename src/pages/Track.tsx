@@ -11,6 +11,9 @@ import { hubMap } from "@/lib/sim/network";
 import { SingleShipmentMap } from "@/components/pulse/SingleShipmentMap";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { CURRENCIES, formatMoney, countryByCode } from "@/lib/sim/countries";
+import { useFxConvert } from "@/hooks/useFx";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function Track() {
   const { id: idParam } = useParams();
@@ -19,6 +22,13 @@ export default function Track() {
   const [loading, setLoading] = useState(false);
   const [shipment, setShipment] = useState<ShipmentRow | null>(null);
   const [, setNow] = useState(Date.now());
+  const [viewCurrency, setViewCurrency] = useState<string>(() => {
+    try {
+      const lang = navigator.language || "en-US";
+      const region = lang.split("-")[1] ?? "US";
+      return countryByCode.get(region.toUpperCase())?.currency ?? "USD";
+    } catch { return "USD"; }
+  });
 
   useEffect(() => {
     const t = setInterval(() => setNow(Date.now()), 15_000);
@@ -120,6 +130,9 @@ export default function Track() {
                   <span className="flex items-center gap-1.5"><User className="w-3.5 h-3.5" />for <span className="text-foreground">{shipment.recipient_name}</span></span>
                   <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" />{hubMap.get(shipment.origin)?.city} → {hubMap.get(shipment.destination)?.city}</span>
                 </div>
+                {Number(shipment.amount_due) > 0 && (
+                  <PriceBlock shipment={shipment} viewCurrency={viewCurrency} setViewCurrency={setViewCurrency} />
+                )}
                 <div>
                   <div className="flex justify-between text-xs mb-1.5">
                     <span className="text-muted-foreground">At <span className="text-foreground">{hubMap.get(live.currentHub)?.city}</span>{live.nextHub && <> → {hubMap.get(live.nextHub)?.city}</>}</span>
@@ -171,4 +184,37 @@ function StatusBadge({ status }: { status: string }) {
   };
   const s = map[status] ?? map.in_transit;
   return <Badge variant="outline" className={s.cls}>{s.label}</Badge>;
+}
+
+function PriceBlock({ shipment, viewCurrency, setViewCurrency }: {
+  shipment: ShipmentRow; viewCurrency: string; setViewCurrency: (v: string) => void;
+}) {
+  const base = Number(shipment.amount_due) || 0;
+  const baseCurrency = (shipment.currency || "USD");
+  const { data, loading } = useFxConvert(base, baseCurrency, viewCurrency);
+  return (
+    <div className="glass-strong rounded-xl p-3 space-y-2">
+      <div className="flex items-center justify-between gap-2">
+        <div>
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Amount due</div>
+          <div className="font-display text-lg">{formatMoney(base, baseCurrency)}</div>
+        </div>
+        <div className="w-[110px]">
+          <Select value={viewCurrency} onValueChange={setViewCurrency}>
+            <SelectTrigger className="bg-muted/40 border-border h-8 text-xs"><SelectValue /></SelectTrigger>
+            <SelectContent className="max-h-72">
+              {CURRENCIES.map(c => <SelectItem key={c.code} value={c.code}>{c.code}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      {viewCurrency !== baseCurrency && (
+        <div className="text-xs text-muted-foreground">
+          {loading ? "Converting…" : data
+            ? <>≈ <span className="text-foreground font-medium">{formatMoney(data.converted, viewCurrency)}</span> <span className="opacity-60">· rate {data.rate.toFixed(4)} as of {data.asOf}</span></>
+            : "FX unavailable"}
+        </div>
+      )}
+    </div>
+  );
 }

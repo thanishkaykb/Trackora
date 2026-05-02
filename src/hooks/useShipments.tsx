@@ -11,8 +11,11 @@ type CreateInput = {
   shop: string;
   recipientName: string;
   recipientPhone?: string;
+  recipientPhoneCountry?: string;
+  recipientCountry?: string;
   recipientAddress?: string;
   amountDue?: number;
+  currency?: string;
   paymentStatus?: "paid" | "unpaid";
   priority?: boolean;
   eco?: boolean;
@@ -92,8 +95,11 @@ export function ShipmentsProvider({ children }: { children: ReactNode }) {
       shop: input.shop,
       recipient_name: input.recipientName,
       recipient_phone: input.recipientPhone ?? null,
+      recipient_phone_country: input.recipientPhoneCountry ?? null,
+      recipient_country: input.recipientCountry ?? null,
       recipient_address: input.recipientAddress ?? null,
       amount_due: input.amountDue ?? 0,
+      currency: input.currency ?? "USD",
       payment_status: input.paymentStatus ?? "unpaid",
       dispatched_at: now,
     }).select().single();

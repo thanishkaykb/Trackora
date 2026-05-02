@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { HUBS, EDGES, hubMap } from "@/lib/sim/network";
 import { computeLive, type ShipmentRow } from "@/lib/sim/timeline";
 import { useEffect, useState } from "react";
+import { WorldBackdrop } from "./WorldBackdrop";
 
 const W = 1000;
 const H = 560;
@@ -33,6 +34,7 @@ export function SingleShipmentMap({ shipment }: { shipment: ShipmentRow }) {
     <div className="glass rounded-2xl p-4 relative overflow-hidden">
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto relative">
+        <WorldBackdrop />
         {EDGES.map((e, i) => {
           const fa = hubMap.get(e.from)!;
           const fb = hubMap.get(e.to)!;

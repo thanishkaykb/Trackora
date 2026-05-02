@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Brain, Leaf, Zap, X, Store, Copy, User, MapPin, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { formatMoney } from "@/lib/sim/countries";
 
 export function SellerShipmentPanel() {
   const { shipments, selectedId, remove } = useShipments();
@@ -61,7 +62,7 @@ export function SellerShipmentPanel() {
             <span className={cn("font-medium", s.payment_status === "paid" ? "text-success" : "text-warning")}>
               {s.payment_status.toUpperCase()}
             </span>
-            {s.amount_due > 0 && <span className="text-muted-foreground"> · ${s.amount_due}</span>}
+            {s.amount_due > 0 && <span className="text-muted-foreground"> · {formatMoney(Number(s.amount_due), s.currency || "USD")}</span>}
           </div>
         </div>
         <div className="glass-strong rounded-xl p-2.5">

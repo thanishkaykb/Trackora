@@ -34,7 +34,11 @@ export type ShipmentRow = {
   shop: string;
   recipient_name: string;
   recipient_address: string | null;
+  recipient_country?: string | null;
+  recipient_phone?: string | null;
+  recipient_phone_country?: string | null;
   amount_due: number;
+  currency?: string;
   payment_status: string;
   dispatched_at: string;
   delivered_at: string | null;

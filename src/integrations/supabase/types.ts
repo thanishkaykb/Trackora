@@ -45,6 +45,7 @@ export type Database = {
         Row: {
           amount_due: number
           created_at: string
+          currency: string
           current_hub: string | null
           delay_cause: string | null
           delay_minutes: number
@@ -62,8 +63,10 @@ export type Database = {
           priority: boolean
           progress: number
           recipient_address: string | null
+          recipient_country: string | null
           recipient_name: string
           recipient_phone: string | null
+          recipient_phone_country: string | null
           route: Json
           segment_progress: number
           shop: string
@@ -75,6 +78,7 @@ export type Database = {
         Insert: {
           amount_due?: number
           created_at?: string
+          currency?: string
           current_hub?: string | null
           delay_cause?: string | null
           delay_minutes?: number
@@ -92,8 +96,10 @@ export type Database = {
           priority?: boolean
           progress?: number
           recipient_address?: string | null
+          recipient_country?: string | null
           recipient_name?: string
           recipient_phone?: string | null
+          recipient_phone_country?: string | null
           route?: Json
           segment_progress?: number
           shop?: string
@@ -105,6 +111,7 @@ export type Database = {
         Update: {
           amount_due?: number
           created_at?: string
+          currency?: string
           current_hub?: string | null
           delay_cause?: string | null
           delay_minutes?: number
@@ -122,8 +129,10 @@ export type Database = {
           priority?: boolean
           progress?: number
           recipient_address?: string | null
+          recipient_country?: string | null
           recipient_name?: string
           recipient_phone?: string | null
+          recipient_phone_country?: string | null
           route?: Json
           segment_progress?: number
           shop?: string
