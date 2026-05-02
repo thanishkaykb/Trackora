@@ -63,6 +63,7 @@ export type Database = {
           progress: number
           recipient_address: string | null
           recipient_name: string
+          recipient_phone: string | null
           route: Json
           segment_progress: number
           shop: string
@@ -92,6 +93,7 @@ export type Database = {
           progress?: number
           recipient_address?: string | null
           recipient_name?: string
+          recipient_phone?: string | null
           route?: Json
           segment_progress?: number
           shop?: string
@@ -121,6 +123,7 @@ export type Database = {
           progress?: number
           recipient_address?: string | null
           recipient_name?: string
+          recipient_phone?: string | null
           route?: Json
           segment_progress?: number
           shop?: string
