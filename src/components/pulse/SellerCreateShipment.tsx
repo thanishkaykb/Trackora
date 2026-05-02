@@ -14,6 +14,7 @@ const schema = z.object({
   itemName: z.string().trim().min(1).max(120),
   shop: z.string().trim().min(1).max(120),
   recipientName: z.string().trim().min(1).max(120),
+  recipientPhone: z.string().trim().min(5, "Phone number is required").max(30),
   recipientAddress: z.string().trim().max(500).optional(),
   amountDue: z.number().min(0).max(1_000_000),
 });
@@ -25,6 +26,7 @@ export function SellerCreateShipment() {
   const [itemName, setItemName] = useState("");
   const [shop, setShop] = useState("");
   const [recipientName, setRecipientName] = useState("");
+  const [recipientPhone, setRecipientPhone] = useState("");
   const [recipientAddress, setRecipientAddress] = useState("");
   const [amount, setAmount] = useState("0");
   const [paid, setPaid] = useState(false);
@@ -36,7 +38,7 @@ export function SellerCreateShipment() {
   const submit = async () => {
     if (origin === destination) return toast.error("Origin and destination must differ");
     const parsed = schema.safeParse({
-      itemName, shop, recipientName,
+      itemName, shop, recipientName, recipientPhone,
       recipientAddress: recipientAddress || undefined,
       amountDue: Number(amount) || 0,
     });
@@ -47,6 +49,7 @@ export function SellerCreateShipment() {
       itemName: parsed.data.itemName,
       shop: parsed.data.shop,
       recipientName: parsed.data.recipientName,
+      recipientPhone: parsed.data.recipientPhone,
       recipientAddress: parsed.data.recipientAddress,
       amountDue: parsed.data.amountDue,
       paymentStatus: paid ? "paid" : "unpaid",
@@ -56,7 +59,7 @@ export function SellerCreateShipment() {
     if (!s) return toast.error("Failed to dispatch");
     setLastTid(s.tracking_id);
     toast.success(`Dispatched ${s.tracking_id}`);
-    setItemName(""); setRecipientName(""); setRecipientAddress(""); setAmount("0");
+    setItemName(""); setRecipientName(""); setRecipientPhone(""); setRecipientAddress(""); setAmount("0");
   };
 
   return (
@@ -75,6 +78,9 @@ export function SellerCreateShipment() {
         </Field>
         <Field label="Recipient name *">
           <Input value={recipientName} onChange={e => setRecipientName(e.target.value)} placeholder="Maya Chen" />
+        </Field>
+        <Field label="Recipient phone *">
+          <Input type="tel" value={recipientPhone} onChange={e => setRecipientPhone(e.target.value)} placeholder="+1 555 123 4567" />
         </Field>
         <Field label="Amount due (USD)">
           <Input type="number" min={0} value={amount} onChange={e => setAmount(e.target.value)} />
