@@ -185,3 +185,36 @@ function StatusBadge({ status }: { status: string }) {
   const s = map[status] ?? map.in_transit;
   return <Badge variant="outline" className={s.cls}>{s.label}</Badge>;
 }
+
+function PriceBlock({ shipment, viewCurrency, setViewCurrency }: {
+  shipment: ShipmentRow; viewCurrency: string; setViewCurrency: (v: string) => void;
+}) {
+  const base = Number(shipment.amount_due) || 0;
+  const baseCurrency = (shipment.currency || "USD");
+  const { data, loading } = useFxConvert(base, baseCurrency, viewCurrency);
+  return (
+    <div className="glass-strong rounded-xl p-3 space-y-2">
+      <div className="flex items-center justify-between gap-2">
+        <div>
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Amount due</div>
+          <div className="font-display text-lg">{formatMoney(base, baseCurrency)}</div>
+        </div>
+        <div className="w-[110px]">
+          <Select value={viewCurrency} onValueChange={setViewCurrency}>
+            <SelectTrigger className="bg-muted/40 border-border h-8 text-xs"><SelectValue /></SelectTrigger>
+            <SelectContent className="max-h-72">
+              {CURRENCIES.map(c => <SelectItem key={c.code} value={c.code}>{c.code}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      {viewCurrency !== baseCurrency && (
+        <div className="text-xs text-muted-foreground">
+          {loading ? "Converting…" : data
+            ? <>≈ <span className="text-foreground font-medium">{formatMoney(data.converted, viewCurrency)}</span> <span className="opacity-60">· rate {data.rate.toFixed(4)} as of {data.asOf}</span></>
+            : "FX unavailable"}
+        </div>
+      )}
+    </div>
+  );
+}
