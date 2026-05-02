@@ -15,7 +15,7 @@ const schema = z.object({
   shop: z.string().trim().min(1).max(120),
   recipientName: z.string().trim().min(1).max(120),
   recipientPhone: z.string().trim().min(5, "Phone number is required").max(30),
-  recipientAddress: z.string().trim().max(500).optional(),
+  recipientAddress: z.string().trim().min(1, "Address is required").max(500),
   amountDue: z.number().min(0).max(1_000_000),
 });
 
@@ -38,8 +38,7 @@ export function SellerCreateShipment() {
   const submit = async () => {
     if (origin === destination) return toast.error("Origin and destination must differ");
     const parsed = schema.safeParse({
-      itemName, shop, recipientName, recipientPhone,
-      recipientAddress: recipientAddress || undefined,
+      itemName, shop, recipientName, recipientPhone, recipientAddress,
       amountDue: Number(amount) || 0,
     });
     if (!parsed.success) return toast.error("Please fill all required fields");
@@ -86,7 +85,7 @@ export function SellerCreateShipment() {
           <Input type="number" min={0} value={amount} onChange={e => setAmount(e.target.value)} />
         </Field>
         <div className="md:col-span-2">
-          <Field label="Recipient address">
+          <Field label="Recipient address *">
             <Input value={recipientAddress} onChange={e => setRecipientAddress(e.target.value)} placeholder="123 Market St, San Francisco, CA" />
           </Field>
         </div>
