@@ -83,10 +83,9 @@ export function SellerMap() {
 
         {HUBS.map(h => (
           <g key={h.id} transform={`translate(${h.x * W}, ${h.y * H})`}>
-            <circle r={18} fill="url(#hubGrad)" opacity={0.25} />
-            <circle r={6} fill="hsl(var(--primary))" />
-            <text y={-14} textAnchor="middle" className="fill-foreground" fontSize="11" fontFamily="JetBrains Mono, monospace">{h.id}</text>
-            <text y={26} textAnchor="middle" className="fill-muted-foreground" fontSize="9">{h.city}</text>
+            <circle r={12} fill="url(#hubGrad)" opacity={0.25} />
+            <circle r={4} fill="hsl(var(--primary))" />
+            <text y={-8} textAnchor="middle" className="fill-foreground" fontSize="9" fontFamily="JetBrains Mono, monospace">{h.id}</text>
           </g>
         ))}
 
