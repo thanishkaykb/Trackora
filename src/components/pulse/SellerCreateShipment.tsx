@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { useShipments } from "@/hooks/useShipments";
 import { COUNTRIES, CURRENCIES, hubForCountry, countryByCode } from "@/lib/sim/countries";
-import { hubMap } from "@/lib/sim/network";
+import { HUBS, hubMap } from "@/lib/sim/network";
 import { Leaf, Plus, Zap, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -18,7 +18,7 @@ const schema = z.object({
   recipientPhone: z.string().trim().min(4, "Phone number is required").max(30),
   recipientAddress: z.string().trim().min(1, "Address is required").max(500),
   recipientCountry: z.string().length(2),
-  originCountry: z.string().length(2),
+  originHub: z.string().min(3),
   phoneCountry: z.string().length(2),
   currency: z.string().length(3),
   amountDue: z.number().min(0).max(1_000_000_000),
@@ -26,7 +26,7 @@ const schema = z.object({
 
 export function SellerCreateShipment() {
   const { create } = useShipments();
-  const [originCountry, setOriginCountry] = useState("US");
+  const [originHub, setOriginHub] = useState("JFK");
   const [recipientCountry, setRecipientCountry] = useState("GB");
   const [phoneCountry, setPhoneCountry] = useState("GB");
   const [currency, setCurrency] = useState("USD");
@@ -42,15 +42,15 @@ export function SellerCreateShipment() {
   const [submitting, setSubmitting] = useState(false);
   const [lastTid, setLastTid] = useState<string | null>(null);
 
-  const origin = useMemo(() => hubForCountry(originCountry), [originCountry]);
+  const origin = originHub;
   const destination = useMemo(() => hubForCountry(recipientCountry), [recipientCountry]);
   const phoneDial = countryByCode.get(phoneCountry)?.dial ?? "+";
 
   const submit = async () => {
-    if (origin === destination) return toast.error("Origin and destination countries must use different hubs");
+    if (origin === destination) return toast.error("Origin hub and destination country must use different hubs");
     const parsed = schema.safeParse({
       itemName, shop, recipientName, recipientPhone, recipientAddress,
-      recipientCountry, originCountry, phoneCountry, currency,
+      recipientCountry, originHub, phoneCountry, currency,
       amountDue: Number(amount) || 0,
     });
     if (!parsed.success) return toast.error("Please fill all required fields");
@@ -90,7 +90,18 @@ export function SellerCreateShipment() {
         <Field label="Shop / brand *">
           <Input value={shop} onChange={e => setShop(e.target.value)} placeholder="Aether Audio" />
         </Field>
-        <CountrySelect label="From country *" value={originCountry} onChange={setOriginCountry} />
+        <Field label="From hub *">
+          <Select value={originHub} onValueChange={setOriginHub}>
+            <SelectTrigger className="bg-muted/40 border-border"><SelectValue /></SelectTrigger>
+            <SelectContent className="max-h-72">
+              {HUBS.map(h => (
+                <SelectItem key={h.id} value={h.id}>
+                  <span className="font-mono">{h.id}</span> · {h.city}, {h.country}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </Field>
         <CountrySelect label="To country *" value={recipientCountry} onChange={setRecipientCountry} />
         <Field label="Recipient name *">
           <Input value={recipientName} onChange={e => setRecipientName(e.target.value)} placeholder="Maya Chen" />
