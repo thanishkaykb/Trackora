@@ -171,7 +171,8 @@ export function shortestPath(
 
     for (const { id: v, edge } of neighbors(u)) {
       if (!queue.has(v)) continue;
-      const hub = hubMap.get(v)!;
+      const hub = hubMap.get(v);
+      if (!hub) continue;
       const alt = (dist.get(u) ?? Infinity) + weight(edge, hub);
       if (alt < (dist.get(v) ?? Infinity)) {
         dist.set(v, alt);
@@ -192,7 +193,8 @@ export function pathMinutes(path: string[]): number {
   for (let i = 0; i < path.length - 1; i++) {
     const e = edgeBetween(path[i], path[i + 1]);
     if (!e) return Infinity;
-    const hub = hubMap.get(path[i + 1])!;
+    const hub = hubMap.get(path[i + 1]);
+    if (!hub) return Infinity;
     m += e.baseMinutes * (1 + e.congestion * 0.6) * (1 + Math.max(0, hub.loadFactor - 1) * 0.5);
   }
   return Math.round(m);

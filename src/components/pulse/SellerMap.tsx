@@ -34,8 +34,9 @@ export function SellerMap() {
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto relative">
         <WorldBackdrop />
         {EDGES.map((e, i) => {
-          const a = hubMap.get(e.from)!;
-          const b = hubMap.get(e.to)!;
+          const a = hubMap.get(e.from);
+          const b = hubMap.get(e.to);
+          if (!a || !b) return null;
           const key = e.from < e.to ? `${e.from}-${e.to}` : `${e.to}-${e.from}`;
           const active = activeRoutes.has(key);
           return (
@@ -54,8 +55,9 @@ export function SellerMap() {
           <g>
             {(selected.route as string[]).map((id, i, arr) => {
               if (i === arr.length - 1) return null;
-              const a = hubMap.get(id)!;
-              const b = hubMap.get(arr[i + 1])!;
+              const a = hubMap.get(id);
+              const b = hubMap.get(arr[i + 1]);
+              if (!a || !b) return null;
               return (
                 <line key={i}
                   x1={a.x * W} y1={a.y * H} x2={b.x * W} y2={b.y * H}
@@ -92,7 +94,8 @@ export function SellerMap() {
         {shipments.map(s => {
           const live = computeLive(s);
           if (live.status === "delivered") return null;
-          const a = hubMap.get(live.currentHub)!;
+          const a = hubMap.get(live.currentHub);
+          if (!a) return null;
           const b = live.nextHub ? hubMap.get(live.nextHub) : undefined;
           const x = b ? a.x + (b.x - a.x) * live.segmentProgress : a.x;
           const y = b ? a.y + (b.y - a.y) * live.segmentProgress : a.y;
