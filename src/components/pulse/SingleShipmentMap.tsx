@@ -36,8 +36,9 @@ export function SingleShipmentMap({ shipment }: { shipment: ShipmentRow }) {
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto relative">
         <WorldBackdrop />
         {EDGES.map((e, i) => {
-          const fa = hubMap.get(e.from)!;
-          const fb = hubMap.get(e.to)!;
+          const fa = hubMap.get(e.from);
+          const fb = hubMap.get(e.to);
+          if (!fa || !fb) return null;
           const key = e.from < e.to ? `${e.from}-${e.to}` : `${e.to}-${e.from}`;
           const active = onRoute.has(key);
           return (
